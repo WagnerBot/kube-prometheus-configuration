@@ -107,6 +107,12 @@ spec:
         - mountPath: /grafana-dashboard-definitions/0/logs-fibonacci-dashboard
           name: grafana-dashboard-logs-fibonacci-dashboard
           readOnly: false
+        - mountPath: /grafana-dashboard-definitions/0/logs-fileapi-dashboard
+          name: grafana-dashboard-logs-fileapi-dashboard
+          readOnly: false
+        - mountPath: /grafana-dashboard-definitions/0/logs-matmul-dashboard
+          name: grafana-dashboard-logs-matmul-dashboard
+          readOnly: false
         - mountPath: /grafana-dashboard-definitions/0/namespace-by-pod
           name: grafana-dashboard-namespace-by-pod
           readOnly: false
@@ -210,6 +216,12 @@ spec:
       - configMap:
           name: grafana-dashboard-logs-fibonacci-dashboard
         name: grafana-dashboard-logs-fibonacci-dashboard
+      - configMap:
+          name: grafana-dashboard-logs-fileapi-dashboard
+        name: grafana-dashboard-logs-fileapi-dashboard
+      - configMap:
+          name: grafana-dashboard-logs-matmul-dashboard
+        name: grafana-dashboard-logs-matmul-dashboard
       - configMap:
           name: grafana-dashboard-namespace-by-pod
         name: grafana-dashboard-namespace-by-pod

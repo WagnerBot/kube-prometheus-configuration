@@ -54,7 +54,9 @@ local kp = (import 'kube-prometheus/main.libsonnet') +
     grafana+: {
       dashboards+:: {
         'function-dashboard.json': (import 'function-dashboard.json'),
-        'node-dashboard.json': (import 'nodes-dashboard.json'),
+        'logs-fibonacci-dashboard.json': (import 'logs-fibonacci-dashboard.json'),
+        'logs-fileapi-dashboard.json': (import 'logs-fileapi-dashboard.json'),
+        'logs-matmul-dashboard.json': (import 'logs-matmul-dashboard.json'),
       },
     },
   },

@@ -1,0 +1,12 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: openfaas-servicemonitor
+  namespace: openfaas
+spec:
+  endpoints:
+  - port: http-metrics
+  jobLabel: app
+  selector:
+    matchLabels:
+      app: gateway
