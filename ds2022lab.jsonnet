@@ -1,70 +1,79 @@
-local kp =
-  (import 'kube-prometheus/main.libsonnet') +
-  // Uncomment the following imports to enable its patches
-  // (import 'kube-prometheus/addons/anti-affinity.libsonnet') +
-  // (import 'kube-prometheus/addons/managed-cluster.libsonnet') +
-  // (import 'kube-prometheus/addons/node-ports.libsonnet') +
-  // (import 'kube-prometheus/addons/static-etcd.libsonnet') +
-  // (import 'kube-prometheus/addons/custom-metrics.libsonnet') +
-  // (import 'kube-prometheus/addons/external-metrics.libsonnet') +
-  // (import 'kube-prometheus/addons/pyrra.libsonnet') +
-  {
-    values+:: {
-      common+: {
-        namespace: 'monitoring',
+local add = {
+  openfaas: {
+    serviceMonitorOpenfaas: {
+      apiVersion: 'monitoring.coreos.com/v1',
+      kind: 'ServiceMonitor',
+      metadata: {
+        name: 'openfaas-servicemonitor',
+        namespace: 'openfaas',
       },
-      prometheus+: {
-        namespaces+: ['openfaas', 'openfaas-fn'],
-      },
-      grafana+: {
-        dashboards+:: {
-          'function-dashboard.json': (import 'function-dashboard.json'),
-          'node-dashboard.json': (import 'nodes-dashboard.json'),
-        },
-      },
-    },
-    openfaas: {
-      serviceMonitorOpenfaas: {
-        apiVersion: 'monitoring.coreos.com/v1',
-        kind: 'ServiceMonitor',
-        metadata: {
-          name: 'openfaas-servicemonitor',
-          namespace: 'openfaas',
-        },
-        spec: {
-          jobLabel: 'app',
-          endpoints: [
-            {
-              port: 'http-metrics',
-            },
-          ],
-          selector: {
-            matchLabels: {
-              app: 'gateway',
-            },
+      spec: {
+        jobLabel: 'app',
+        endpoints: [
+          {
+            port: 'http-metrics',
+          },
+        ],
+        selector: {
+          matchLabels: {
+            app: 'gateway',
           },
         },
       },
     },
+  },
+};
 
-  };
+local update = {
+  nodeExporter+: {
+    serviceMonitor+: {
+      spec+: {
+        endpoints: std.map(
+          function(endpoint)
+            endpoint {
+              interval: '10s',
+            },
+          super.endpoints
+        ),
+      },
+    },
+  },
+};
 
+local kp = (import 'kube-prometheus/main.libsonnet') + add + update;
+local kp = (import 'kube-prometheus/main.libsonnet') +
+           add +
+           update + {
+  values+:: {
+    common+: {
+      namespace: 'monitoring',
+    },
+    prometheus+: {
+      namespaces+: ['openfaas', 'openfaas-fn'],
+    },
+    grafana+: {
+      dashboards+:: {
+        'function-dashboard.json': (import 'function-dashboard.json'),
+        'node-dashboard.json': (import 'nodes-dashboard.json'),
+      },
+    },
+  },
+};
 { 'setup/0namespace-namespace': kp.kubePrometheus.namespace } +
 {
   ['setup/prometheus-operator-' + name]: kp.prometheusOperator[name]
   for name in std.filter((function(name) name != 'serviceMonitor' && name != 'prometheusRule'), std.objectFields(kp.prometheusOperator))
 } +
-// { 'setup/pyrra-slo-CustomResourceDefinition': kp.pyrra.crd } +
 // serviceMonitor and prometheusRule are separated so that they can be created after the CRDs are ready
 { 'prometheus-operator-serviceMonitor': kp.prometheusOperator.serviceMonitor } +
 { 'prometheus-operator-prometheusRule': kp.prometheusOperator.prometheusRule } +
 { 'kube-prometheus-prometheusRule': kp.kubePrometheus.prometheusRule } +
-{ ['alertmanager-' + name]: kp.alertmanager[name] for name in std.objectFields(kp.alertmanager) } +
-{ ['blackbox-exporter-' + name]: kp.blackboxExporter[name] for name in std.objectFields(kp.blackboxExporter) } +
-{ ['grafana-' + name]: kp.grafana[name] for name in std.objectFields(kp.grafana) } +
-// { ['pyrra-' + name]: kp.pyrra[name] for name in std.objectFields(kp.pyrra) if name != 'crd' } +
-{ ['kube-state-metrics-' + name]: kp.kubeStateMetrics[name] for name in std.objectFields(kp.kubeStateMetrics) } +
-{ ['kubernetes-' + name]: kp.kubernetesControlPlane[name] for name in std.objectFields(kp.kubernetesControlPlane) }
 { ['node-exporter-' + name]: kp.nodeExporter[name] for name in std.objectFields(kp.nodeExporter) } +
+{ ['blackbox-exporter-' + name]: kp.blackboxExporter[name] for name in std.objectFields(kp.blackboxExporter) } +
+{ ['kube-state-metrics-' + name]: kp.kubeStateMetrics[name] for name in std.objectFields(kp.kubeStateMetrics) } +
+{ ['alertmanager-' + name]: kp.alertmanager[name] for name in std.objectFields(kp.alertmanager) } +
 { ['prometheus-' + name]: kp.prometheus[name] for name in std.objectFields(kp.prometheus) } +
-{ ['prometheus-adapter-' + name]: kp.prometheusAdapter[name] for name in std.objectFields(kp.prometheusAdapter) }
+{ ['prometheus-adapter-' + name]: kp.prometheusAdapter[name] for name in std.objectFields(kp.prometheusAdapter) } +
+{ ['grafana-' + name]: kp.grafana[name] for name in std.objectFields(kp.grafana) } +
+{ ['kubernetes-' + name]: kp.kubernetesControlPlane[name] for name in std.objectFields(kp.kubernetesControlPlane) }
+{ ['openfaas-' + name]: kp.openfaas[name] for name in std.objectFields(kp.openfaas) }
