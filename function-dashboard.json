@@ -643,8 +643,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -869,8 +868,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -966,8 +964,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1089,8 +1086,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1186,8 +1182,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1357,9 +1352,31 @@
       },
       {
         "current": {
-          "selected": false,
-          "text": "cloud0ds2022-lab2-3",
-          "value": "cloud0ds2022-lab2-3"
+          "selected": true,
+          "text": [
+            "cloud7ds2022-lab2-3",
+            "cloud8ds2022-lab2-3",
+            "cloud-master",
+            "cloud0ds2022-lab2-3",
+            "cloud1ds2022-lab2-3",
+            "cloud2ds2022-lab2-3",
+            "cloud3ds2022-lab2-3",
+            "cloud4ds2022-lab2-3",
+            "cloud5ds2022-lab2-3",
+            "cloud6ds2022-lab2-3"
+          ],
+          "value": [
+            "cloud7ds2022-lab2-3",
+            "cloud8ds2022-lab2-3",
+            "cloud-master",
+            "cloud0ds2022-lab2-3",
+            "cloud1ds2022-lab2-3",
+            "cloud2ds2022-lab2-3",
+            "cloud3ds2022-lab2-3",
+            "cloud4ds2022-lab2-3",
+            "cloud5ds2022-lab2-3",
+            "cloud6ds2022-lab2-3"
+          ]
         },
         "datasource": {
           "type": "prometheus",
@@ -1367,8 +1384,8 @@
         },
         "definition": "label_values(kube_node_info{cluster=\"$cluster\"}, node)",
         "hide": 0,
-        "includeAll": false,
-        "multi": false,
+        "includeAll": true,
+        "multi": true,
         "name": "node",
         "options": [],
         "query": {
@@ -1389,6 +1406,7 @@
   },
   "timepicker": {
     "refresh_intervals": [
+      "1s",
       "5s",
       "10s",
       "30s",
