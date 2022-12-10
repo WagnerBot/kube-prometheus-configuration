@@ -31,7 +31,20 @@ local update = {
         endpoints: std.map(
           function(endpoint)
             endpoint {
-              interval: '10s',
+              interval: '1s',
+            },
+          super.endpoints
+        ),
+      },
+    },
+  },
+  kubeStateMetrics+: {
+    serviceMonitor+: {
+      spec+: {
+        endpoints: std.map(
+          function(endpoint)
+            endpoint {
+              interval: '1s',
             },
           super.endpoints
         ),
