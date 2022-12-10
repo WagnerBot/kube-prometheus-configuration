@@ -25,26 +25,14 @@ local add = {
 };
 
 local update = {
-  nodeExporter+: {
-    serviceMonitor+: {
-      spec+: {
-        endpoints: std.map(
-          function(endpoint)
-            endpoint {
-              interval: '1s',
-            },
-          super.endpoints
-        ),
-      },
-    },
-  },
   kubeStateMetrics+: {
     serviceMonitor+: {
       spec+: {
         endpoints: std.map(
           function(endpoint)
             endpoint {
-              interval: '1s',
+              interval: '5s',
+              scrapeTimeout: '5s',
             },
           super.endpoints
         ),

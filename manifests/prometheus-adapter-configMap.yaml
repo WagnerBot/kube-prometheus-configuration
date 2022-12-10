@@ -13,7 +13,7 @@ data:
         "nodeQuery": |
           sum by (<<.GroupBy>>) (
             1 - irate(
-              node_cpu_seconds_total{mode="idle"}[4s]
+              node_cpu_seconds_total{mode="idle"}[60s]
             )
             * on(namespace, pod) group_left(node) (
               node_namespace_pod:kube_pod_info:{<<.LabelMatchers>>}
