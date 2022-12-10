@@ -65,6 +65,19 @@ local update = {
       },
     },
   },
+  blackboxExporter+: {
+    serviceMonitor+: {
+      spec+: {
+        endpoints: std.map(
+          function(endpoint)
+            endpoint {
+              interval: '5s',
+            },
+          super.endpoints
+        ),
+      },
+    },
+  },
 };
 
 local kp = (import 'kube-prometheus/main.libsonnet') + add + update;
