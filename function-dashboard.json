@@ -348,6 +348,42 @@
                 }
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "max capacity"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 2
+              },
+              {
+                "id": "custom.stacking",
+                "value": {
+                  "group": "false",
+                  "mode": "normal"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    10,
+                    10
+                  ],
+                  "fill": "dash"
+                }
+              }
+            ]
           }
         ]
       },
@@ -376,6 +412,19 @@
       },
       "pluginVersion": "9.3.1",
       "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
+          "editorMode": "code",
+          "expr": "sum(kube_node_status_capacity{cluster=\"$cluster\", node=~\"$node\", resource=\"cpu\"})",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "max capacity",
+          "range": true,
+          "refId": "B"
+        },
         {
           "datasource": {
             "type": "prometheus",

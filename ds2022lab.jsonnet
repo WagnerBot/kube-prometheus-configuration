@@ -181,8 +181,12 @@ local kp = (import 'kube-prometheus/main.libsonnet') +
         // k8s-resources-workload.json
         // k8s-resources-workloads-namespace.json
         // kubelet.json
-
       },
+      config+: {
+        sections+: {
+          dashboards: { min_refresh_interval: '1s' }
+        }
+      }
     },
   },
 };

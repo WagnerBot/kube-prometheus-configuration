@@ -10,6 +10,8 @@ metadata:
   namespace: monitoring
 stringData:
   grafana.ini: |
+    [dashboards]
+    min_refresh_interval = 1s
     [date_formats]
     default_timezone = UTC
 type: Opaque
