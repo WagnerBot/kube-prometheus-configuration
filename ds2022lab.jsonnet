@@ -189,7 +189,7 @@ local kp = (import 'kube-prometheus/main.libsonnet') +
       },
       datasources: [
           {
-            name: 'Prometheus',
+            name: 'prometheus',
             type: 'prometheus',
             access: 'proxy',
             orgId: 1,
@@ -198,7 +198,7 @@ local kp = (import 'kube-prometheus/main.libsonnet') +
             editable: false,
           },
           {
-            name: 'Loki',
+            name: 'loki',
             type: 'loki',
             access: 'proxy',
             orgId: 1,
