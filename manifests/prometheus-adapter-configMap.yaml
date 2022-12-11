@@ -7,7 +7,7 @@ data:
         "containerQuery": |
           sum by (<<.GroupBy>>) (
             irate (
-                container_cpu_usage_seconds_total{<<.LabelMatchers>>,container!="",pod!=""}[120s]
+                container_cpu_usage_seconds_total{<<.LabelMatchers>>,container!="",pod!=""}[20s]
             )
           )
         "nodeQuery": |

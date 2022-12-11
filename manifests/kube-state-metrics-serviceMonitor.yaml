@@ -12,7 +12,7 @@ spec:
   endpoints:
   - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
     honorLabels: true
-    interval: 5s
+    interval: 30s
     metricRelabelings:
     - action: drop
       regex: kube_endpoint_address_not_ready|kube_endpoint_address_available
@@ -23,14 +23,13 @@ spec:
     - action: labeldrop
       regex: (pod|service|endpoint|namespace)
     scheme: https
-    scrapeTimeout: 5s
+    scrapeTimeout: 30s
     tlsConfig:
       insecureSkipVerify: true
   - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
-    interval: 5s
+    interval: 30s
     port: https-self
     scheme: https
-    scrapeTimeout: 5s
     tlsConfig:
       insecureSkipVerify: true
   jobLabel: app.kubernetes.io/name

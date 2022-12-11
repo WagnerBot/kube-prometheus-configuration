@@ -25,22 +25,98 @@ local add = {
 };
 
 local update = {
-  kubeStateMetrics+: {
-    serviceMonitor+: {
+  // kubeStateMetrics+: {
+  //   serviceMonitor+: {
+  //     spec+: {
+  //       endpoints: std.map(
+  //         function(endpoint)
+  //           endpoint {
+  //             interval: '5s',
+  //             scrapeTimeout: '5s',
+  //           },
+  //         super.endpoints
+  //       ),
+  //     },
+  //   },
+  // },
+  // prometheusAdapter+: {
+  //   serviceMonitor+: {
+  //     spec+: {
+  //       endpoints: std.map(
+  //         function(endpoint)
+  //           endpoint {
+  //             interval: '5s',
+  //           },
+  //         super.endpoints
+  //       ),
+  //     },
+  //   },
+  // },
+  // prometheusOperator+: {
+  //   serviceMonitor+: {
+  //     spec+: {
+  //       endpoints: std.map(
+  //         function(endpoint)
+  //           endpoint {
+  //             interval: '5s',
+  //           },
+  //         super.endpoints
+  //       ),
+  //     },
+  //   },
+  // },
+  // blackboxExporter+: {
+  //   serviceMonitor+: {
+  //     spec+: {
+  //       endpoints: std.map(
+  //         function(endpoint)
+  //           endpoint {
+  //             interval: '5s',
+  //           },
+  //         super.endpoints
+  //       ),
+  //     },
+  //   },
+  // },
+  // prometheus+: {
+  //   serviceMonitor+: {
+  //     spec+: {
+  //       endpoints: std.map(
+  //         function(endpoint)
+  //           endpoint {
+  //             interval: '5s',
+  //           },
+  //         super.endpoints
+  //       ),
+  //     },
+  //   },
+  // },
+  // alertmanager+: {
+  //   serviceMonitor+: {
+  //     spec+: {
+  //       endpoints: std.map(
+  //         function(endpoint)
+  //           endpoint {
+  //             interval: '5s',
+  //           },
+  //         super.endpoints
+  //       ),
+  //     },
+  //   },
+  // },
+  kubernetesControlPlane+: {
+    serviceMonitorKubeScheduler+: {
       spec+: {
         endpoints: std.map(
           function(endpoint)
             endpoint {
               interval: '5s',
-              scrapeTimeout: '5s',
             },
           super.endpoints
         ),
       },
     },
-  },
-  prometheusAdapter+: {
-    serviceMonitor+: {
+    serviceMonitorKubelet+: {
       spec+: {
         endpoints: std.map(
           function(endpoint)
@@ -51,9 +127,7 @@ local update = {
         ),
       },
     },
-  },
-  prometheusOperator+: {
-    serviceMonitor+: {
+    serviceMonitorKubeControllerManager+: {
       spec+: {
         endpoints: std.map(
           function(endpoint)
@@ -64,9 +138,7 @@ local update = {
         ),
       },
     },
-  },
-  blackboxExporter+: {
-    serviceMonitor+: {
+    serviceMonitorApiserver+: {
       spec+: {
         endpoints: std.map(
           function(endpoint)
@@ -77,33 +149,7 @@ local update = {
         ),
       },
     },
-  },
-  prometheus+: {
-    serviceMonitor+: {
-      spec+: {
-        endpoints: std.map(
-          function(endpoint)
-            endpoint {
-              interval: '5s',
-            },
-          super.endpoints
-        ),
-      },
-    },
-  },
-  alertmanager+: {
-    serviceMonitor+: {
-      spec+: {
-        endpoints: std.map(
-          function(endpoint)
-            endpoint {
-              interval: '5s',
-            },
-          super.endpoints
-        ),
-      },
-    },
-  },
+  }
 };
 
 local kp = (import 'kube-prometheus/main.libsonnet') + add + update;
