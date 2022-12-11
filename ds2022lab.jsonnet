@@ -1,109 +1,4 @@
-local add = {
-  openfaas: {
-    serviceMonitorOpenfaas: {
-      apiVersion: 'monitoring.coreos.com/v1',
-      kind: 'ServiceMonitor',
-      metadata: {
-        name: 'openfaas-servicemonitor',
-        namespace: 'openfaas',
-      },
-      spec: {
-        jobLabel: 'app',
-        endpoints: [
-          {
-            port: 'http-metrics',
-          },
-        ],
-        selector: {
-          matchLabels: {
-            app: 'gateway',
-          },
-        },
-      },
-    },
-  },
-};
-
-local update = {
-  // kubeStateMetrics+: {
-  //   serviceMonitor+: {
-  //     spec+: {
-  //       endpoints: std.map(
-  //         function(endpoint)
-  //           endpoint {
-  //             interval: '5s',
-  //             scrapeTimeout: '5s',
-  //           },
-  //         super.endpoints
-  //       ),
-  //     },
-  //   },
-  // },
-  // prometheusAdapter+: {
-  //   serviceMonitor+: {
-  //     spec+: {
-  //       endpoints: std.map(
-  //         function(endpoint)
-  //           endpoint {
-  //             interval: '5s',
-  //           },
-  //         super.endpoints
-  //       ),
-  //     },
-  //   },
-  // },
-  // prometheusOperator+: {
-  //   serviceMonitor+: {
-  //     spec+: {
-  //       endpoints: std.map(
-  //         function(endpoint)
-  //           endpoint {
-  //             interval: '5s',
-  //           },
-  //         super.endpoints
-  //       ),
-  //     },
-  //   },
-  // },
-  // blackboxExporter+: {
-  //   serviceMonitor+: {
-  //     spec+: {
-  //       endpoints: std.map(
-  //         function(endpoint)
-  //           endpoint {
-  //             interval: '5s',
-  //           },
-  //         super.endpoints
-  //       ),
-  //     },
-  //   },
-  // },
-  // prometheus+: {
-  //   serviceMonitor+: {
-  //     spec+: {
-  //       endpoints: std.map(
-  //         function(endpoint)
-  //           endpoint {
-  //             interval: '5s',
-  //           },
-  //         super.endpoints
-  //       ),
-  //     },
-  //   },
-  // },
-  // alertmanager+: {
-  //   serviceMonitor+: {
-  //     spec+: {
-  //       endpoints: std.map(
-  //         function(endpoint)
-  //           endpoint {
-  //             interval: '5s',
-  //           },
-  //         super.endpoints
-  //       ),
-  //     },
-  //   },
-  // },
+local update_intervals = {
   kubernetesControlPlane+: {
     serviceMonitorKubeScheduler+: {
       spec+: {
@@ -152,10 +47,9 @@ local update = {
   }
 };
 
-local kp = (import 'kube-prometheus/main.libsonnet') + add + update;
+local kp = (import 'kube-prometheus/main.libsonnet') + update_intervals;
 local kp = (import 'kube-prometheus/main.libsonnet') +
-           add +
-           update + {
+           update_intervals + {
   values+:: {
     common+: {
       namespace: 'monitoring',
@@ -166,21 +60,7 @@ local kp = (import 'kube-prometheus/main.libsonnet') +
     grafana+: {
       dashboards:: {
         'function-dashboard.json': (import 'function-dashboard.json'),
-        'logs-fibonacci-dashboard.json': (import 'logs-fibonacci-dashboard.json'),
-        'logs-fileapi-dashboard.json': (import 'logs-fileapi-dashboard.json'),
-        'logs-matmul-dashboard.json': (import 'logs-matmul-dashboard.json'),
-        // 'alertmanager-overview.json': null,
-        // apiserver.json
-        // cluster-total.json
-        // controller-manager.json
-        // grafana-overview.json
-        // k8s-resources-cluster.json
-        // k8s-resources-namespace.json
-        // k8s-resources-node.json
-        // k8s-resources-pod.json
-        // k8s-resources-workload.json
-        // k8s-resources-workloads-namespace.json
-        // kubelet.json
+        'logs-dashboard.json': (import 'logs-dashboard.json'),
       },
       config+: {
         sections+: {
@@ -227,4 +107,3 @@ local kp = (import 'kube-prometheus/main.libsonnet') +
 { ['prometheus-adapter-' + name]: kp.prometheusAdapter[name] for name in std.objectFields(kp.prometheusAdapter) } +
 { ['grafana-' + name]: kp.grafana[name] for name in std.objectFields(kp.grafana) } +
 { ['kubernetes-' + name]: kp.kubernetesControlPlane[name] for name in std.objectFields(kp.kubernetesControlPlane) }
-{ ['openfaas-' + name]: kp.openfaas[name] for name in std.objectFields(kp.openfaas) }

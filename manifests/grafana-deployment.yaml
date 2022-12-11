@@ -68,14 +68,8 @@ spec:
         - mountPath: /grafana-dashboard-definitions/0/function-dashboard
           name: grafana-dashboard-function-dashboard
           readOnly: false
-        - mountPath: /grafana-dashboard-definitions/0/logs-fibonacci-dashboard
-          name: grafana-dashboard-logs-fibonacci-dashboard
-          readOnly: false
-        - mountPath: /grafana-dashboard-definitions/0/logs-fileapi-dashboard
-          name: grafana-dashboard-logs-fileapi-dashboard
-          readOnly: false
-        - mountPath: /grafana-dashboard-definitions/0/logs-matmul-dashboard
-          name: grafana-dashboard-logs-matmul-dashboard
+        - mountPath: /grafana-dashboard-definitions/0/logs-dashboard
+          name: grafana-dashboard-logs-dashboard
           readOnly: false
         - mountPath: /etc/grafana
           name: grafana-config
@@ -103,14 +97,8 @@ spec:
           name: grafana-dashboard-function-dashboard
         name: grafana-dashboard-function-dashboard
       - configMap:
-          name: grafana-dashboard-logs-fibonacci-dashboard
-        name: grafana-dashboard-logs-fibonacci-dashboard
-      - configMap:
-          name: grafana-dashboard-logs-fileapi-dashboard
-        name: grafana-dashboard-logs-fileapi-dashboard
-      - configMap:
-          name: grafana-dashboard-logs-matmul-dashboard
-        name: grafana-dashboard-logs-matmul-dashboard
+          name: grafana-dashboard-logs-dashboard
+        name: grafana-dashboard-logs-dashboard
       - name: grafana-config
         secret:
           secretName: grafana-config

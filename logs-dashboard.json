@@ -24,6 +24,7 @@
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
+    "id": 6,
     "links": [],
     "liveNow": false,
     "panels": [
@@ -32,6 +33,7 @@
           "type": "loki",
           "uid": "${datasource}"
         },
+        "description": "",
         "fieldConfig": {
           "defaults": {
             "color": {
@@ -57,18 +59,7 @@
                 "mode": "off"
               }
             },
-            "mappings": [
-              {
-                "options": {
-                  "pattern": "[0-9]\\.([0-9]+).*",
-                  "result": {
-                    "index": 0,
-                    "text": "$1"
-                  }
-                },
-                "type": "regex"
-              }
-            ],
+            "mappings": [],
             "thresholds": {
               "mode": "absolute",
               "steps": [
@@ -81,7 +72,8 @@
                   "value": 80
                 }
               ]
-            }
+            },
+            "unit": "s"
           },
           "overrides": []
         },
@@ -120,13 +112,14 @@
               "type": "loki",
               "uid": "${datasource}"
             },
-            "editorMode": "code",
-            "expr": "{app=\"fibonacci\"} |= `Duration` | pattern \"<_> - <_>: <duration>s\"",
+            "editorMode": "builder",
+            "expr": "{app=\"$function\"} |= `Duration` | pattern `<_>:\"<_> <time> <_> - <_>: <duration>s`",
             "queryType": "range",
-            "refId": "A"
+            "refId": "A",
+            "resolution": 1
           }
         ],
-        "title": "Panel Title",
+        "title": "Last 10 Executions",
         "transformations": [
           {
             "id": "extractFields",
@@ -144,7 +137,8 @@
                   "app",
                   "duration",
                   "node_name",
-                  "pod"
+                  "pod",
+                  "time"
                 ]
               }
             }
@@ -156,10 +150,49 @@
                 {
                   "destinationType": "number",
                   "targetField": "duration"
+                },
+                {
+                  "dateFormat": "HH:mm:ss",
+                  "destinationType": "time",
+                  "targetField": "time"
                 }
               ],
               "fields": {}
             }
+          },
+          {
+            "id": "sortBy",
+            "options": {
+              "fields": {},
+              "sort": [
+                {
+                  "desc": false,
+                  "field": "time"
+                }
+              ]
+            }
+          },
+          {
+            "id": "filterByValue",
+            "options": {
+              "filters": [
+                {
+                  "config": {
+                    "id": "greater",
+                    "options": {
+                      "value": 0.5
+                    }
+                  },
+                  "fieldName": "duration"
+                }
+              ],
+              "match": "any",
+              "type": "include"
+            }
+          },
+          {
+            "id": "limit",
+            "options": {}
           }
         ],
         "type": "barchart"
@@ -193,7 +226,7 @@
               "uid": "${datasource}"
             },
             "editorMode": "builder",
-            "expr": "{app=\"fibonacci\"} |= `Duration`",
+            "expr": "{app=\"$function\"} |= `Duration`",
             "queryType": "range",
             "refId": "A"
           }
@@ -224,17 +257,46 @@
           "regex": "",
           "skipUrlSync": false,
           "type": "datasource"
+        },
+        {
+          "current": {
+            "selected": true,
+            "text": "fibonacci",
+            "value": "fibonacci"
+          },
+          "datasource": {
+            "type": "loki",
+            "uid": "${datasource}"
+          },
+          "definition": "",
+          "hide": 0,
+          "includeAll": false,
+          "label": "Function",
+          "multi": false,
+          "name": "function",
+          "options": [],
+          "query": {
+            "label": "app",
+            "refId": "LokiVariableQueryEditor-VariableQuery",
+            "stream": "",
+            "type": 1
+          },
+          "refresh": 1,
+          "regex": "/file|fibonacci|matmul/",
+          "skipUrlSync": false,
+          "sort": 0,
+          "type": "query"
         }
       ]
     },
     "time": {
-      "from": "now-5m",
+      "from": "now-1h",
       "to": "now"
     },
     "timepicker": {},
     "timezone": "",
     "title": "Logs Fibonacci",
     "uid": "7OWzRkcVk",
-    "version": 1,
+    "version": 7,
     "weekStart": ""
   }

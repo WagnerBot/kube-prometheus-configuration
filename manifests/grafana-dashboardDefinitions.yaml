@@ -1512,7 +1512,7 @@ items:
     namespace: monitoring
 - apiVersion: v1
   data:
-    logs-fibonacci-dashboard.json: |-
+    logs-dashboard.json: |-
       {
           "annotations": {
               "list": [
@@ -1541,7 +1541,7 @@ items:
           "editable": true,
           "fiscalYearStartMonth": 0,
           "graphTooltip": 0,
-          "id": 27,
+          "id": 6,
           "links": [
 
           ],
@@ -1550,13 +1550,194 @@ items:
               {
                   "datasource": {
                       "type": "loki",
-                      "uid": "plD96g5Vz"
+                      "uid": "${datasource}"
+                  },
+                  "description": "",
+                  "fieldConfig": {
+                      "defaults": {
+                          "color": {
+                              "mode": "thresholds"
+                          },
+                          "custom": {
+                              "axisCenteredZero": false,
+                              "axisColorMode": "text",
+                              "axisLabel": "",
+                              "axisPlacement": "auto",
+                              "fillOpacity": 100,
+                              "gradientMode": "none",
+                              "hideFrom": {
+                                  "legend": false,
+                                  "tooltip": false,
+                                  "viz": false
+                              },
+                              "lineWidth": 0,
+                              "scaleDistribution": {
+                                  "type": "linear"
+                              },
+                              "thresholdsStyle": {
+                                  "mode": "off"
+                              }
+                          },
+                          "mappings": [
+
+                          ],
+                          "thresholds": {
+                              "mode": "absolute",
+                              "steps": [
+                                  {
+                                      "color": "green",
+                                      "value": null
+                                  },
+                                  {
+                                      "color": "red",
+                                      "value": 80
+                                  }
+                              ]
+                          },
+                          "unit": "s"
+                      },
+                      "overrides": [
+
+                      ]
                   },
                   "gridPos": {
-                      "h": 8,
-                      "w": 12,
+                      "h": 19,
+                      "w": 24,
                       "x": 0,
                       "y": 0
+                  },
+                  "id": 3,
+                  "options": {
+                      "barRadius": 0.05,
+                      "barWidth": 0.75,
+                      "groupWidth": 0.7,
+                      "legend": {
+                          "calcs": [
+
+                          ],
+                          "displayMode": "list",
+                          "placement": "bottom",
+                          "showLegend": true
+                      },
+                      "orientation": "auto",
+                      "showValue": "auto",
+                      "stacking": "none",
+                      "tooltip": {
+                          "mode": "multi",
+                          "sort": "none"
+                      },
+                      "xField": "pod",
+                      "xTickLabelRotation": 0,
+                      "xTickLabelSpacing": 0
+                  },
+                  "pluginVersion": "9.3.1",
+                  "targets": [
+                      {
+                          "datasource": {
+                              "type": "loki",
+                              "uid": "${datasource}"
+                          },
+                          "editorMode": "builder",
+                          "expr": "{app=\"$function\"} |= `Duration` | pattern `<_>:\"<_> <time> <_> - <_>: <duration>s`",
+                          "queryType": "range",
+                          "refId": "A",
+                          "resolution": 1
+                      }
+                  ],
+                  "title": "Last 10 Executions",
+                  "transformations": [
+                      {
+                          "id": "extractFields",
+                          "options": {
+                              "format": "json",
+                              "replace": true,
+                              "source": "labels"
+                          }
+                      },
+                      {
+                          "id": "filterFieldsByName",
+                          "options": {
+                              "include": {
+                                  "names": [
+                                      "app",
+                                      "duration",
+                                      "node_name",
+                                      "pod",
+                                      "time"
+                                  ]
+                              }
+                          }
+                      },
+                      {
+                          "id": "convertFieldType",
+                          "options": {
+                              "conversions": [
+                                  {
+                                      "destinationType": "number",
+                                      "targetField": "duration"
+                                  },
+                                  {
+                                      "dateFormat": "HH:mm:ss",
+                                      "destinationType": "time",
+                                      "targetField": "time"
+                                  }
+                              ],
+                              "fields": {
+
+                              }
+                          }
+                      },
+                      {
+                          "id": "sortBy",
+                          "options": {
+                              "fields": {
+
+                              },
+                              "sort": [
+                                  {
+                                      "desc": false,
+                                      "field": "time"
+                                  }
+                              ]
+                          }
+                      },
+                      {
+                          "id": "filterByValue",
+                          "options": {
+                              "filters": [
+                                  {
+                                      "config": {
+                                          "id": "greater",
+                                          "options": {
+                                              "value": 0.5
+                                          }
+                                      },
+                                      "fieldName": "duration"
+                                  }
+                              ],
+                              "match": "any",
+                              "type": "include"
+                          }
+                      },
+                      {
+                          "id": "limit",
+                          "options": {
+
+                          }
+                      }
+                  ],
+                  "type": "barchart"
+              },
+              {
+                  "datasource": {
+                      "type": "loki",
+                      "uid": "${datasource}"
+                  },
+                  "gridPos": {
+                      "h": 31,
+                      "w": 24,
+                      "x": 0,
+                      "y": 19
                   },
                   "id": 1,
                   "options": {
@@ -1573,13 +1754,12 @@ items:
                       {
                           "datasource": {
                               "type": "loki",
-                              "uid": "plD96g5Vz"
+                              "uid": "${datasource}"
                           },
-                          "editorMode": "code",
-                          "expr": "{app=\"fibonacci\"}",
-                          "key": "Q-11816315-82e1-4eb0-9132-32a0929a90a8-0",
+                          "editorMode": "builder",
+                          "expr": "{app=\"$function\"} |= `Duration`",
                           "queryType": "range",
-                          "refId": "Logs Fibonacci"
+                          "refId": "A"
                       }
                   ],
                   "title": "Logs",
@@ -1593,11 +1773,61 @@ items:
           ],
           "templating": {
               "list": [
+                  {
+                      "current": {
+                          "selected": false,
+                          "text": "loki",
+                          "value": "loki"
+                      },
+                      "hide": 0,
+                      "includeAll": false,
+                      "label": "Datasource",
+                      "multi": false,
+                      "name": "datasource",
+                      "options": [
 
+                      ],
+                      "query": "loki",
+                      "refresh": 1,
+                      "regex": "",
+                      "skipUrlSync": false,
+                      "type": "datasource"
+                  },
+                  {
+                      "current": {
+                          "selected": true,
+                          "text": "fibonacci",
+                          "value": "fibonacci"
+                      },
+                      "datasource": {
+                          "type": "loki",
+                          "uid": "${datasource}"
+                      },
+                      "definition": "",
+                      "hide": 0,
+                      "includeAll": false,
+                      "label": "Function",
+                      "multi": false,
+                      "name": "function",
+                      "options": [
+
+                      ],
+                      "query": {
+                          "label": "app",
+                          "refId": "LokiVariableQueryEditor-VariableQuery",
+                          "stream": "",
+                          "type": 1
+                      },
+                      "refresh": 1,
+                      "regex": "/file|fibonacci|matmul/",
+                      "skipUrlSync": false,
+                      "sort": 0,
+                      "type": "query"
+                  }
               ]
           },
           "time": {
-              "from": "now-6h",
+              "from": "now-1h",
               "to": "now"
           },
           "timepicker": {
@@ -1606,7 +1836,7 @@ items:
           "timezone": "",
           "title": "Logs Fibonacci",
           "uid": "7OWzRkcVk",
-          "version": 1,
+          "version": 7,
           "weekStart": ""
       }
   kind: ConfigMap
@@ -1616,222 +1846,6 @@ items:
       app.kubernetes.io/name: grafana
       app.kubernetes.io/part-of: kube-prometheus
       app.kubernetes.io/version: 9.3.1
-    name: grafana-dashboard-logs-fibonacci-dashboard
-    namespace: monitoring
-- apiVersion: v1
-  data:
-    logs-fileapi-dashboard.json: |-
-      {
-          "annotations": {
-              "list": [
-                  {
-                      "builtIn": 1,
-                      "datasource": {
-                          "type": "grafana",
-                          "uid": "-- Grafana --"
-                      },
-                      "enable": true,
-                      "hide": true,
-                      "iconColor": "rgba(0, 211, 255, 1)",
-                      "name": "Annotations & Alerts",
-                      "target": {
-                          "limit": 100,
-                          "matchAny": false,
-                          "tags": [
-
-                          ],
-                          "type": "dashboard"
-                      },
-                      "type": "dashboard"
-                  }
-              ]
-          },
-          "editable": true,
-          "fiscalYearStartMonth": 0,
-          "graphTooltip": 0,
-          "id": 28,
-          "links": [
-
-          ],
-          "liveNow": false,
-          "panels": [
-              {
-                  "datasource": {
-                      "type": "loki",
-                      "uid": "plD96g5Vz"
-                  },
-                  "gridPos": {
-                      "h": 8,
-                      "w": 12,
-                      "x": 0,
-                      "y": 0
-                  },
-                  "id": 1,
-                  "options": {
-                      "dedupStrategy": "none",
-                      "enableLogDetails": true,
-                      "prettifyLogMessage": false,
-                      "showCommonLabels": false,
-                      "showLabels": false,
-                      "showTime": false,
-                      "sortOrder": "Descending",
-                      "wrapLogMessage": false
-                  },
-                  "targets": [
-                      {
-                          "datasource": {
-                              "type": "loki",
-                              "uid": "plD96g5Vz"
-                          },
-                          "editorMode": "code",
-                          "expr": "{app=\"file\"}",
-                          "key": "Q-11816315-82e1-4eb0-9132-32a0929a90a8-0",
-                          "queryType": "range",
-                          "refId": "Logs Fibonacci"
-                      }
-                  ],
-                  "title": "Logs",
-                  "type": "logs"
-              }
-          ],
-          "schemaVersion": 37,
-          "style": "dark",
-          "tags": [
-
-          ],
-          "templating": {
-              "list": [
-
-              ]
-          },
-          "time": {
-              "from": "now-6h",
-              "to": "now"
-          },
-          "timepicker": {
-
-          },
-          "timezone": "",
-          "title": "Logs File API",
-          "uid": "SA-vRzc4z",
-          "version": 1,
-          "weekStart": ""
-      }
-  kind: ConfigMap
-  metadata:
-    labels:
-      app.kubernetes.io/component: grafana
-      app.kubernetes.io/name: grafana
-      app.kubernetes.io/part-of: kube-prometheus
-      app.kubernetes.io/version: 9.3.1
-    name: grafana-dashboard-logs-fileapi-dashboard
-    namespace: monitoring
-- apiVersion: v1
-  data:
-    logs-matmul-dashboard.json: |-
-      {
-          "annotations": {
-              "list": [
-                  {
-                      "builtIn": 1,
-                      "datasource": {
-                          "type": "grafana",
-                          "uid": "-- Grafana --"
-                      },
-                      "enable": true,
-                      "hide": true,
-                      "iconColor": "rgba(0, 211, 255, 1)",
-                      "name": "Annotations & Alerts",
-                      "target": {
-                          "limit": 100,
-                          "matchAny": false,
-                          "tags": [
-
-                          ],
-                          "type": "dashboard"
-                      },
-                      "type": "dashboard"
-                  }
-              ]
-          },
-          "editable": true,
-          "fiscalYearStartMonth": 0,
-          "graphTooltip": 0,
-          "id": 29,
-          "links": [
-
-          ],
-          "liveNow": false,
-          "panels": [
-              {
-                  "datasource": {
-                      "type": "loki",
-                      "uid": "plD96g5Vz"
-                  },
-                  "gridPos": {
-                      "h": 8,
-                      "w": 12,
-                      "x": 0,
-                      "y": 0
-                  },
-                  "id": 1,
-                  "options": {
-                      "dedupStrategy": "none",
-                      "enableLogDetails": true,
-                      "prettifyLogMessage": false,
-                      "showCommonLabels": false,
-                      "showLabels": false,
-                      "showTime": false,
-                      "sortOrder": "Descending",
-                      "wrapLogMessage": false
-                  },
-                  "targets": [
-                      {
-                          "datasource": {
-                              "type": "loki",
-                              "uid": "plD96g5Vz"
-                          },
-                          "editorMode": "code",
-                          "expr": "{app=\"matmul\"}",
-                          "key": "Q-11816315-82e1-4eb0-9132-32a0929a90a8-0",
-                          "queryType": "range",
-                          "refId": "Logs Matmul"
-                      }
-                  ],
-                  "title": "Logs",
-                  "type": "logs"
-              }
-          ],
-          "schemaVersion": 37,
-          "style": "dark",
-          "tags": [
-
-          ],
-          "templating": {
-              "list": [
-
-              ]
-          },
-          "time": {
-              "from": "now-6h",
-              "to": "now"
-          },
-          "timepicker": {
-
-          },
-          "timezone": "",
-          "title": "Logs Matrix Multiplication",
-          "uid": "d6BoRkc4z",
-          "version": 1,
-          "weekStart": ""
-      }
-  kind: ConfigMap
-  metadata:
-    labels:
-      app.kubernetes.io/component: grafana
-      app.kubernetes.io/name: grafana
-      app.kubernetes.io/part-of: kube-prometheus
-      app.kubernetes.io/version: 9.3.1
-    name: grafana-dashboard-logs-matmul-dashboard
+    name: grafana-dashboard-logs-dashboard
     namespace: monitoring
 kind: ConfigMapList
