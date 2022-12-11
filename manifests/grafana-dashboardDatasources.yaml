@@ -16,10 +16,19 @@ stringData:
             {
                 "access": "proxy",
                 "editable": false,
-                "name": "prometheus",
+                "name": "Prometheus",
                 "orgId": 1,
                 "type": "prometheus",
                 "url": "http://prometheus-k8s.monitoring.svc:9090",
+                "version": 1
+            },
+            {
+                "access": "proxy",
+                "editable": false,
+                "name": "Loki",
+                "orgId": 1,
+                "type": "loki",
+                "url": "http://loki-stack-headless.monitoring.svc:3100",
                 "version": 1
             }
         ]

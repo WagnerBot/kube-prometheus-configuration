@@ -406,7 +406,7 @@
           "showLegend": true
         },
         "tooltip": {
-          "mode": "single",
+          "mode": "multi",
           "sort": "none"
         }
       },
@@ -433,7 +433,7 @@
           "editorMode": "code",
           "expr": "sum(\r\n  sum by (cluster, namespace, pod, container) (\r\n        irate(container_cpu_usage_seconds_total{image!=\"\", job=\"kubelet\", metrics_path=\"/metrics/cadvisor\", cluster=\"$cluster\", node=~\"$node\", pod=~\"(fibonacci.*)|(file.*)|matmul.*\"}[5m])\r\n    )\r\n    * on (cluster, namespace, pod) group_left (node)\r\n    topk by (cluster, namespace, pod) (1, max by (cluster, namespace, pod, node) (kube_pod_info{node!=\"\"}))\r\n  * on(namespace,pod) group_left(workload, workload_type) namespace_workload_pod:kube_pod_owner:relabel{cluster=\"$cluster\", namespace=\"$namespace\", workload_type=\"$type\"}\r\n) by (workload, workload_type)\r\n",
           "hide": false,
-          "legendFormat": "__auto",
+          "legendFormat": "{{workload}}",
           "range": true,
           "refId": "A"
         }
@@ -609,7 +609,8 @@
           "editorMode": "code",
           "expr": "sum(\r\n    container_memory_working_set_bytes{job=\"kubelet\", metrics_path=\"/metrics/cadvisor\", image!=\"\", namespace=\"$namespace\", pod=~\"(fibonacci.*)|(file.*)|matmul.*\"}\r\n    * on (namespace, pod) group_left(node) topk by(namespace, pod) (1, max by(namespace, pod, node) (kube_pod_info{node!=\"\"}))\r\n) by (pod)",
           "hide": false,
-          "legendFormat": "",
+          "interval": "",
+          "legendFormat": "{{pod}}",
           "range": true,
           "refId": "C"
         }
@@ -897,7 +898,7 @@
           "showLegend": true
         },
         "tooltip": {
-          "mode": "single",
+          "mode": "multi",
           "sort": "none"
         }
       },
@@ -994,7 +995,7 @@
           "showLegend": true
         },
         "tooltip": {
-          "mode": "single",
+          "mode": "multi",
           "sort": "none"
         }
       },
@@ -1117,7 +1118,7 @@
           "showLegend": true
         },
         "tooltip": {
-          "mode": "single",
+          "mode": "multi",
           "sort": "none"
         }
       },
@@ -1214,7 +1215,7 @@
           "showLegend": true
         },
         "tooltip": {
-          "mode": "single",
+          "mode": "multi",
           "sort": "none"
         }
       },
@@ -1236,7 +1237,7 @@
       "type": "timeseries"
     }
   ],
-  "refresh": "5s",
+  "refresh": "1s",
   "schemaVersion": 37,
   "style": "dark",
   "tags": [
@@ -1357,28 +1358,10 @@
         "current": {
           "selected": true,
           "text": [
-            "cloud7ds2022-lab2-3",
-            "cloud8ds2022-lab2-3",
-            "cloud-master",
-            "cloud0ds2022-lab2-3",
-            "cloud1ds2022-lab2-3",
-            "cloud2ds2022-lab2-3",
-            "cloud3ds2022-lab2-3",
-            "cloud4ds2022-lab2-3",
-            "cloud5ds2022-lab2-3",
-            "cloud6ds2022-lab2-3"
+            "All"
           ],
           "value": [
-            "cloud7ds2022-lab2-3",
-            "cloud8ds2022-lab2-3",
-            "cloud-master",
-            "cloud0ds2022-lab2-3",
-            "cloud1ds2022-lab2-3",
-            "cloud2ds2022-lab2-3",
-            "cloud3ds2022-lab2-3",
-            "cloud4ds2022-lab2-3",
-            "cloud5ds2022-lab2-3",
-            "cloud6ds2022-lab2-3"
+            "$__all"
           ]
         },
         "datasource": {

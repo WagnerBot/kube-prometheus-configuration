@@ -186,7 +186,27 @@ local kp = (import 'kube-prometheus/main.libsonnet') +
         sections+: {
           dashboards: { min_refresh_interval: '1s' }
         }
-      }
+      },
+      datasources: [
+          {
+            name: 'Prometheus',
+            type: 'prometheus',
+            access: 'proxy',
+            orgId: 1,
+            url: 'http://prometheus-k8s.' + $.values.common.namespace + '.svc:9090',
+            version: 1,
+            editable: false,
+          },
+          {
+            name: 'Loki',
+            type: 'loki',
+            access: 'proxy',
+            orgId: 1,
+            url: 'http://loki-stack-headless.' + $.values.common.namespace + '.svc:3100',
+            version: 1,
+            editable: false,
+          },
+      ],
     },
   },
 };
