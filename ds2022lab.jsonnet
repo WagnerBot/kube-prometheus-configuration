@@ -164,11 +164,24 @@ local kp = (import 'kube-prometheus/main.libsonnet') +
       namespaces+: ['openfaas', 'openfaas-fn'],
     },
     grafana+: {
-      dashboards+:: {
+      dashboards:: {
         'function-dashboard.json': (import 'function-dashboard.json'),
         'logs-fibonacci-dashboard.json': (import 'logs-fibonacci-dashboard.json'),
         'logs-fileapi-dashboard.json': (import 'logs-fileapi-dashboard.json'),
         'logs-matmul-dashboard.json': (import 'logs-matmul-dashboard.json'),
+        // 'alertmanager-overview.json': null,
+        // apiserver.json
+        // cluster-total.json
+        // controller-manager.json
+        // grafana-overview.json
+        // k8s-resources-cluster.json
+        // k8s-resources-namespace.json
+        // k8s-resources-node.json
+        // k8s-resources-pod.json
+        // k8s-resources-workload.json
+        // k8s-resources-workloads-namespace.json
+        // kubelet.json
+
       },
     },
   },

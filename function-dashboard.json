@@ -194,17 +194,15 @@
         },
         {
           "datasource": {
+            "type": "prometheus",
             "uid": "$datasource"
           },
           "editorMode": "code",
-          "expr": "sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{cluster=\"$cluster\", node=~\"$node\", pod=~\"(fibonacci.*)|(file.*)|matmul.*\"}) by (pod)",
-          "format": "time_series",
-          "interval": "",
-          "intervalFactor": 2,
-          "legendFormat": "",
+          "expr": "sum (\r\n    sum by (cluster, namespace, pod, container) (\r\n        irate(container_cpu_usage_seconds_total{image!=\"\", job=\"kubelet\", metrics_path=\"/metrics/cadvisor\", cluster=\"$cluster\", node=~\"$node\", pod=~\"(fibonacci.*)|(file.*)|matmul.*\"}[5m])\r\n    )\r\n    * on (cluster, namespace, pod) group_left (node)\r\n    topk by (cluster, namespace, pod) (1, max by (cluster, namespace, pod, node) (kube_pod_info{node!=\"\"}))\r\n) by (pod)",
+          "hide": false,
+          "legendFormat": "__auto",
           "range": true,
-          "refId": "B",
-          "step": 10
+          "refId": "C"
         }
       ],
       "title": "CPU Usage",
@@ -380,16 +378,15 @@
       "targets": [
         {
           "datasource": {
+            "type": "prometheus",
             "uid": "$datasource"
           },
           "editorMode": "code",
-          "expr": "sum(\n  node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{cluster=\"$cluster\", namespace=\"$namespace\"}\n* on(namespace,pod)\n  group_left(workload, workload_type) namespace_workload_pod:kube_pod_owner:relabel{cluster=\"$cluster\", namespace=\"$namespace\", workload_type=\"$type\"}\n) by (workload, workload_type)\n",
-          "format": "time_series",
-          "intervalFactor": 2,
-          "legendFormat": "{{workload}} - {{workload_type}}",
+          "expr": "sum(\r\n  sum by (cluster, namespace, pod, container) (\r\n        irate(container_cpu_usage_seconds_total{image!=\"\", job=\"kubelet\", metrics_path=\"/metrics/cadvisor\", cluster=\"$cluster\", node=~\"$node\", pod=~\"(fibonacci.*)|(file.*)|matmul.*\"}[5m])\r\n    )\r\n    * on (cluster, namespace, pod) group_left (node)\r\n    topk by (cluster, namespace, pod) (1, max by (cluster, namespace, pod, node) (kube_pod_info{node!=\"\"}))\r\n  * on(namespace,pod) group_left(workload, workload_type) namespace_workload_pod:kube_pod_owner:relabel{cluster=\"$cluster\", namespace=\"$namespace\", workload_type=\"$type\"}\r\n) by (workload, workload_type)\r\n",
+          "hide": false,
+          "legendFormat": "__auto",
           "range": true,
-          "refId": "A",
-          "step": 10
+          "refId": "A"
         }
       ],
       "title": "CPU Usage",
@@ -518,31 +515,6 @@
                 }
               }
             ]
-          },
-          {
-            "__systemRef": "hideSeriesFrom",
-            "matcher": {
-              "id": "byNames",
-              "options": {
-                "mode": "exclude",
-                "names": [
-                  "max capacity",
-                  "file-55d76cd64c-5sxnp"
-                ],
-                "prefix": "All except:",
-                "readOnly": true
-              }
-            },
-            "properties": [
-              {
-                "id": "custom.hideFrom",
-                "value": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": true
-                }
-              }
-            ]
           }
         ]
       },
@@ -563,7 +535,7 @@
           "showLegend": true
         },
         "tooltip": {
-          "mode": "single",
+          "mode": "multi",
           "sort": "none"
         }
       },
@@ -582,16 +554,15 @@
         },
         {
           "datasource": {
+            "type": "prometheus",
             "uid": "$datasource"
           },
           "editorMode": "code",
-          "expr": "sum(node_namespace_pod_container:container_memory_working_set_bytes{cluster=\"$cluster\", node=~\"$node\", container!=\"\", pod=~\"(fibonacci.*)|(file.*)|matmul.*\"}) by (pod)",
-          "format": "time_series",
-          "intervalFactor": 2,
-          "legendFormat": "{{pod}}",
+          "expr": "sum(\r\n    container_memory_working_set_bytes{job=\"kubelet\", metrics_path=\"/metrics/cadvisor\", image!=\"\", namespace=\"$namespace\", pod=~\"(fibonacci.*)|(file.*)|matmul.*\"}\r\n    * on (namespace, pod) group_left(node) topk by(namespace, pod) (1, max by(namespace, pod, node) (kube_pod_info{node!=\"\"}))\r\n) by (pod)",
+          "hide": false,
+          "legendFormat": "",
           "range": true,
-          "refId": "B",
-          "step": 10
+          "refId": "C"
         }
       ],
       "title": "Memory Usage (w/o cache)",
@@ -643,7 +614,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -753,7 +725,7 @@
           "showLegend": true
         },
         "tooltip": {
-          "mode": "single",
+          "mode": "multi",
           "sort": "none"
         }
       },
@@ -768,28 +740,6 @@
           "intervalFactor": 2,
           "legendFormat": "{{workload}} - {{workload_type}}",
           "refId": "A",
-          "step": 10
-        },
-        {
-          "datasource": {
-            "uid": "$datasource"
-          },
-          "expr": "scalar(kube_resourcequota{cluster=\"$cluster\", namespace=\"$namespace\", type=\"hard\",resource=\"requests.memory\"})",
-          "format": "time_series",
-          "intervalFactor": 2,
-          "legendFormat": "quota - requests",
-          "refId": "B",
-          "step": 10
-        },
-        {
-          "datasource": {
-            "uid": "$datasource"
-          },
-          "expr": "scalar(kube_resourcequota{cluster=\"$cluster\", namespace=\"$namespace\", type=\"hard\",resource=\"limits.memory\"})",
-          "format": "time_series",
-          "intervalFactor": 2,
-          "legendFormat": "quota - limits",
-          "refId": "C",
           "step": 10
         }
       ],
@@ -868,7 +818,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -964,7 +915,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1086,7 +1038,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1182,7 +1135,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
