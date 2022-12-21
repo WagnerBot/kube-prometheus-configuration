@@ -57,9 +57,6 @@ local kp = (import 'kube-prometheus/main.libsonnet') +
     prometheus+: {
       namespaces+: ['openfaas', 'openfaas-fn'],
     },
-	nodeExporter+: {
-		namespace: 'openfaas'	
-	},
     grafana+: {
       dashboards:: {
         'function-dashboard.json': (import 'function-dashboard.json'),

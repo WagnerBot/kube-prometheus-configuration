@@ -9,7 +9,7 @@ metadata:
     prometheus: k8s
     role: alert-rules
   name: node-exporter-rules
-  namespace: openfaas
+  namespace: monitoring
 spec:
   groups:
   - name: node-exporter
