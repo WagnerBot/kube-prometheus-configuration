@@ -16,7 +16,7 @@ local update_intervals = {
         endpoints: std.map(
           function(endpoint)
             endpoint {
-              interval: '5s',
+              interval: '1s',
             },
           super.endpoints
         ),
@@ -57,6 +57,9 @@ local kp = (import 'kube-prometheus/main.libsonnet') +
     prometheus+: {
       namespaces+: ['openfaas', 'openfaas-fn'],
     },
+	nodeExporter+: {
+		namespace: 'openfaas'	
+	},
     grafana+: {
       dashboards:: {
         'function-dashboard.json': (import 'function-dashboard.json'),
